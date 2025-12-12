@@ -240,7 +240,7 @@ import {state} from "./state.js";
           let taskDuration=modalwindow.querySelector("#taskDuration").value;
           let comment=modalwindow.querySelector("#comment").value;
           if (nameOfTask.trim() == ''||Number(contractNumber) === 0 || Number(taskDuration) === 0) { 
-            let existingAlarm = modalBoxContainer.querySelector(".alarmText");
+            let existingAlarm = modalwindow.querySelector(".alarmText");
             if (!existingAlarm){
               let modalBoxContainer=modalwindow.querySelector(".modal_box_container");
               let alarm=document.createElement("span");
@@ -355,4 +355,5 @@ import {state} from "./state.js";
       if (state.user.userId && state.user.name && state.user.surname) main();
       else window.location.href = 'login.html';   
     }
+
     else window.location.href = 'login.html';
