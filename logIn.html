@@ -1,0 +1,237 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>диплом</title>
+    <link href="css/test.css" rel="stylesheet" type="text/css">
+    <style>
+         html{
+            
+         }
+         
+         .container{
+            width: 100%;
+            height: 100vh;
+            display: grid;
+            align-items: center;
+            justify-content: center;
+         }
+         .window{
+            font-size: 2vh;
+            width: 40vw;
+            padding: 3vh;
+            background-color: white;
+            border-radius: 3vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+         }
+         .buttonsContainer {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+         }
+
+         .modal_box_container span,input,textarea {
+            font-family: "MontBlanc";
+            margin-bottom: 1vh;
+        }
+        .modal_box_container input,textarea{
+            border: none;
+            border-bottom: 0.05vw solid black;
+        }
+        .modal_box_container input:focus, textarea:focus{
+            border-radius: 1vh;
+            outline: none;
+            background-color: #EDECEC;
+            border-bottom: 0.05vw solid #a3a3d9;
+        }
+        .lightButton {
+            font-size: 2vh;
+            border: none;
+            background-color: white;
+            color: #a3a3d9;
+        }
+        .lightButton:hover {
+            color: #5959aa;
+        }
+        #logIn, #signUp {
+            font-size: 2vh;
+            width: 30%;
+            height: 4vh;
+            margin-top: 1vh;
+            margin-bottom: 1vh;
+            color:black;
+            background-color: white;
+            border: 1px solid black;
+            border-radius: 0.5vh;
+            font-family: "MontBlanc";
+        }
+        #logIn:hover, #signUp:hover{
+
+            color: #a3a3d9;
+            background-color: white;
+            border: 1px solid #a3a3d9;
+            font-family: "MontBlanc";
+        }
+    </style>
+</head>
+<body style="max-height: 100%;">
+    <div class="container">
+        <div class="window">
+            <div class="modal_box_container">
+                <h1>Авторизация</h1>
+                <span>Логин:</span>
+                <input type="text" id="login">
+                <span>Пароль:</span>
+                <input type="password" id="password">
+                <span id="message" hidden></span>
+                <div class="buttonsContainer">
+                    <button id="logIn">Войти</button>
+                    <button id="signUpLayout" class="lightButton">Зарегистрироваться</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+<script>
+    //макет авторизации
+    let oldContainer=document.querySelector(".modal_box_container");
+    let newContainer=document.createElement("div");
+    //макет регистрации
+    newContainer.className="modal_box_container";
+    newContainer.innerHTML=`<h1>Регистрация</h1><span>Логин:</span>
+            <input id="login" type="text">
+            <span>Имя:</span>
+            <input id="name" type="text">
+            <span>Фамилия:</span>
+            <input id="surname" type="text">
+            <span>Пароль:</span>
+            <input id="password" type="password">
+            <span>Подтвердите пароль:</span>
+            <input id="password2" type="password">
+            <span id="message" hidden></span>
+            <div class="buttonsContainer">
+                <button id="signUp">Регистрация</button>
+                <button id="logInLayout" class="lightButton">Войти</button>
+            </div>`;
+    document.getElementById("signUpLayout").addEventListener("click", function(){
+        oldContainer.replaceWith(newContainer);
+    });
+    document.getElementById("logIn").addEventListener("click", async function(){
+        let login=document.getElementById("login");
+        let password=document.getElementById("password");
+        let message=document.getElementById("message");
+        if ((login.value=="")||(password.value=="")) {
+            message.textContent="Заполните все поля";
+            message.hidden=false;
+            message.style.color="red";
+        }
+        else {
+            message.hidden=true;
+            let response = await fetch('./backend/authorization.php', {
+            method:'POST',
+            headers: {
+              'Content-Type': 'application/json;charset=utf-8'
+            },
+            body: JSON.stringify({ login: login.value, password: password.value})
+            });
+
+            if (!response.ok) {
+            throw new Error('Network response was not ok');
+            }
+
+            let data = await response.json();
+            let time = new Date();
+            if(data["response"]=="true"){
+                switch(data["role"]){
+                    case "1":
+                        time.setTime(time.getTime() + (6000000));
+                        document.cookie = `user_id=${data['id']};expires=${time.toUTCString()}; path=/;`;
+                        document.cookie = `name=${data['name']};expires=${time.toUTCString()}; path=/;`;
+                        document.cookie = `surname=${data['surname']};expires=${time.toUTCString()}; path=/;`;
+                        document.cookie = `role=${data['role']};expires=${time.toUTCString()}; path=/;`;
+                        window.location.href = 'admin.html';
+                        break;
+                    case "2":
+                        time.setTime(time.getTime() + (6000000));
+                        document.cookie = `user_id=${data['id']};expires=${time.toUTCString()}; path=/;`;
+                        document.cookie = `name=${data['name']};expires=${time.toUTCString()}; path=/;`;
+                        document.cookie = `surname=${data['surname']};expires=${time.toUTCString()}; path=/;`;
+                        document.cookie = `role=${data['role']};expires=${time.toUTCString()}; path=/;`;
+                        window.location.href = 'test.html';
+                        break;
+                    case "3":
+                        time.setTime(time.getTime() + (6000000));
+                        document.cookie = `user_id=${data['id']};expires=${time.toUTCString()}; path=/;`;
+                        document.cookie = `name=${data['name']};expires=${time.toUTCString()}; path=/;`;
+                        document.cookie = `surname=${data['surname']};expires=${time.toUTCString()}; path=/;`;
+                        document.cookie = `role=${data['role']};expires=${time.toUTCString()}; path=/;`;
+                        window.location.href = 'seller.html';
+                        break;
+                    case "4":
+                        time.setTime(time.getTime() + (6000000));
+                        document.cookie = `user_id=${data['id']};expires=${time.toUTCString()}; path=/;`;
+                        document.cookie = `name=${data['name']};expires=${time.toUTCString()}; path=/;`;
+                        document.cookie = `surname=${data['surname']};expires=${time.toUTCString()}; path=/;`;
+                        document.cookie = `role=${data['role']};expires=${time.toUTCString()}; path=/;`;
+                        window.location.href = 'worker.html';
+                        break;
+                }
+            }
+            else {
+                message.hidden=false;
+                message.style.color="red";
+                message.textContent=data["message"];
+            }
+        }
+    });
+    newContainer.querySelector("#logInLayout").addEventListener("click", function(){
+        newContainer.replaceWith(oldContainer);
+    });
+    newContainer.querySelector("#signUp").addEventListener("click", async function(){
+        let login=newContainer.querySelector("#login");
+        let name=newContainer.querySelector("#name");
+        let surname=newContainer.querySelector("#surname");
+        let password=newContainer.querySelector("#password");
+        let password2=newContainer.querySelector("#password2");
+        let message=newContainer.querySelector("#message");
+        if ((login.value=="")||(password.value=="")||(password2.value=="")||(name.value=="")||(surname.value=="")||(password.value!=password2.value)) {
+            message.textContent="Проверьте корректность введенных данных";
+            message.hidden=false;
+            message.style.color="red";
+        }
+        else {
+            message.hidden=false;
+            let response = await fetch('./backend/signup.php', {
+            method:'POST',
+            headers: {
+              'Content-Type': 'application/json;charset=utf-8'
+            },
+            body: JSON.stringify({ login: login.value, password: password.value, name:name.value, surname: surname.value})
+            });
+
+            if (!response.ok) {
+            throw new Error('Network response was not ok');
+            }
+
+            let data = await response.text();
+            switch(data){
+                case "1":
+                    message.textContent="Пользователь с таким логином уже существует";
+                    message.style.color="red";
+                    break;
+                case "2":
+                    message.textContent="Вы успешно прошли регистрацию! Ожидайте пока Вам присвоят роль в системе";
+                    message.style.color="blue";
+                    break;
+                case "error":
+                    message.textContent="Произошла ошибка! Попробуйте снова";
+                    message.style.color="red";
+                    break;
+            }
+        } 
+    });
+
+</script>
+</html>
