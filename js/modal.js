@@ -49,3 +49,13 @@ function close() {
 }
 
 export default { open, close };
+
+//изменения в чужом репозитории через форк 
+function close2() {
+    modalwindow.classList.remove("open");
+    setTimeout(function () {
+        //modalwindow.parentNode.removeChild(modalwindow);
+        body.removeChild(modalwindow);
+        modalwindow = null;
+    }, 500);
+}
